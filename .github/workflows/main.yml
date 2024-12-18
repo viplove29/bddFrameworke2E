@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-tests:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java environment
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11' # Use the JDK version required for your project
+
+      # Step 3: Cache Maven dependencies to speed up builds
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      # Step 5: Run Maven tests
+      - name: Run Maven Tests
+        run: mvn clean test
+
+      - name: Send Test Report Email BDD
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com  # gmail SMTP server
+          server_port: 587  # TLS port
+          username: ${{ secrets.GMAIL_USERNAME }}  # gmail email address
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}  # gmail app password or regular password
+          from: ${{ secrets.GMAIL_USERNAME }}  # Sender's email address (same as username)
+          to: ${{ secrets.TO_EMAIL }}  # Recipient email (use secret for flexibility)
+          subject: "Test Report for my youtube viewers BDD"
+          body: "Please find the attached test report BDD."
+          attachments: target/cucumber-reports.html
