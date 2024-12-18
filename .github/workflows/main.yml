@@ -35,7 +35,7 @@ jobs:
       - name: Run Maven Tests
         run: mvn clean test
 
-      - name: Send Test Report Email BDD
+      - name: Send Test Report Email BDD Viplove Report Cucumber report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com  # gmail SMTP server
@@ -44,6 +44,6 @@ jobs:
           password: ${{ secrets.GMAIL_APP_PASSWORD }}  # gmail app password or regular password
           from: ${{ secrets.GMAIL_USERNAME }}  # Sender's email address (same as username)
           to: ${{ secrets.TO_EMAIL }}  # Recipient email (use secret for flexibility)
-          subject: "Test Report for my youtube viewers BDD"
-          body: "Please find the attached test report BDD."
+          subject: "Test Report for my youtube viewers BDD farmweork report  for today "
+          body: "Please find the attached test report BDD. This is my body "
           attachments: target/cucumber-reports.html
